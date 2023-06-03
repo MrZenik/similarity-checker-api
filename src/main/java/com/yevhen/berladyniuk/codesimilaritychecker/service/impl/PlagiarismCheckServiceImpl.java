@@ -3,24 +3,21 @@ package com.yevhen.berladyniuk.codesimilaritychecker.service.impl;
 import com.yevhen.berladyniuk.codesimilaritychecker.dto.CheckRequest;
 import com.yevhen.berladyniuk.codesimilaritychecker.dto.UserDto;
 import com.yevhen.berladyniuk.codesimilaritychecker.service.PlagiarismCheckService;
+import com.yevhen.berladyniuk.codesimilaritychecker.util.DirectoryManager;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +27,13 @@ public class PlagiarismCheckServiceImpl implements PlagiarismCheckService {
 
     @Value("${code-similarity.main-directory}")
     private String mainDirectory;
+
+    private final DirectoryManager directoryManager;
+
+    @Autowired
+    public PlagiarismCheckServiceImpl(DirectoryManager directoryManager) {
+        this.directoryManager = directoryManager;
+    }
 
 //    @Async
 //    @Override
@@ -87,7 +91,9 @@ public class PlagiarismCheckServiceImpl implements PlagiarismCheckService {
         try {
             List<String> arguments = parseRequest(checkRequest, mainDirectory + "/" + loggedInUser.getMainDirectoryPath(), loggedInUser.getId());
 
-            arguments.forEach(System.out::println);
+            directoryManager.createDirectory(loggedInUser.getMainDirectoryPath() + "/report");
+
+            // arguments.forEach(System.out::println);
             // Get the path to the Python script
             Path scriptPath = Paths.get("/app/similarity-checker/check.py");
 
