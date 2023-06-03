@@ -12,6 +12,7 @@ import numpy as np
 import pkg_resources
 from jinja2 import Template
 import psycopg2
+from psycopg2.extensions import parse_dsn
 
 import defaults
 from utils import (filter_code, highlight_overlap, get_copied_slices,
@@ -159,15 +160,18 @@ def compare_files(file1_data, file2_data):
 
 
 def save_to_db(code_list, teacher_id):
-    host = os.getenv("PYTHON_DB_HOST", "localhost")
-
-    connection = psycopg2.connect(
-        host=host,
-        port="5432",
-        database="code-similarity",
-        user="user",
-        password="password"
-    )
+    database_url = os.getenv("DATABASE_URL")
+    if database_url is not None:
+        connection_parameters = parse_dsn(database_url)
+        connection = psycopg2.connect(**connection_parameters)
+    else:
+        connection = psycopg2.connect(
+            host=os.getenv("PYTHON_DB_HOST", "localhost"),
+            port="5432",
+            database="code-similarity",
+            user="user",
+            password="password"
+        )
 
     cursor = connection.cursor()
 
