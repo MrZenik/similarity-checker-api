@@ -32,4 +32,4 @@ RUN apk add --no-cache python3-dev py3-pip && \
     pip3 install psycopg2-binary
 
 COPY src/main/resources/similarity-checker /app/similarity-checker
-COPY target/*.jar app.jar
+COPY ./target/*.jar app.jar
