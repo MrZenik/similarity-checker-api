@@ -21,3 +21,6 @@ security:
   jwt:
     token:
       secret-key: 7aB#kPm@3Lx1$t9cVd8u
+
+server:
+  port: ${PORT:8080}
