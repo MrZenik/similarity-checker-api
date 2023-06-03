@@ -1,0 +1,23 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME:user}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/code-similarity}
+  liquibase:
+    change-log: classpath:db/changelog/main-changelog.xml
+
+code-similarity:
+#  main-directory: /data
+  main-directory: /home/user/main
+  admin-email: admin@gmail.com
+
+security:
+  jwt:
+    token:
+      secret-key: 7aB#kPm@3Lx1$t9cVd8u
